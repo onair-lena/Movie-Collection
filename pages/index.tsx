@@ -1,50 +1,68 @@
 import { Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { API_URL, API_KEY_3 } from "../src/utils/api";
+import React, { useEffect, useRef, useState } from "react";
+import Card from "../src/components/card";
+import SideBar from "../src/components/sideBar";
+import { API_ALL_FILMS_URL, API_KEY_3 } from "../src/utils/api/api";
+import { fetchData } from "../src/utils/fetchData";
+import { Films } from "../src/utils/types";
 
 const useStyles = makeStyles(() => ({
-  root: {},
-
-  footer: {},
-  image: {
-    backgroundColor: "grey",
+  root: {
+    maxHeight: "100vh",
+  },
+  sidebar: {
+    borderRight: "0.5px solid rgba(0, 0, 0, 0.12)",
+  },
+  cards: {
+    overflowY: "scroll",
+    maxHeight: "100vh",
+  },
+  cardContainer: {
+    border: "0.5px solid rgba(0, 0, 0, 0.12)",
   },
 }));
 
-type Films = {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: number[];
-  id: number;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  release_date: Date;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-};
-
 interface FilmDataProps {
   data: Films[];
+  totalPages: number;
 }
 
-export default function Home({ data }: FilmDataProps) {
+export default function Home({ data, totalPages }: FilmDataProps) {
   const classes = useStyles();
+  const router = useRouter();
+  const inputRef = useRef<any>();
   const [filmData, setFilmData] = useState<Films[]>([]);
+  const [pageNumber, setPageNumber] = useState(1);
   //const [sort] = useState("popularity.desc");
 
   // const getData = useCallback(async () => {
   //   await fetch(`${API_URL}?api_key=${API_KEY_3}&sort_by=${sort}&page=1`)
   //     .then((response) => response.json())
   //     .then((result) => setFilmData(result.results));
-  // }, [filmData, sort]);
+  // }, [filmData, sort])
+  const timeout = useRef<any>();
+
+  const handleScroll = (e: React.MouseEvent<HTMLDivElement>) => {
+    const bottom =
+      (e.target as HTMLDivElement).scrollHeight -
+      (e.target as HTMLDivElement).scrollTop -
+      window.innerHeight;
+    if (bottom < window.innerHeight && pageNumber !== totalPages) {
+      clearTimeout(timeout.current);
+      setPageNumber(pageNumber + 1);
+      timeout.current = window.setTimeout(async () => {
+        const newPageData = await fetchData(
+          API_ALL_FILMS_URL,
+          `?api_key=${API_KEY_3}&page=${pageNumber + 1}`
+        );
+        setFilmData(filmData.concat(newPageData?.results));
+      }, 200);
+    }
+  };
+  // console.log(filmData);
 
   useEffect(() => {
     if (data) {
@@ -52,10 +70,13 @@ export default function Home({ data }: FilmDataProps) {
     }
   }, [data]);
 
-  console.log(data);
   if (!data) {
     return <p>...loading...</p>;
   }
+
+  const handleClick = (item: Films) => {
+    router.push(`/film/${item?.id}`);
+  };
 
   return (
     <>
@@ -66,51 +87,52 @@ export default function Home({ data }: FilmDataProps) {
       </Head>
 
       <Grid container className={classes.root}>
-        <Grid container item xs={2}>
-          <Grid>buttons</Grid>
+        <Grid container item xs={2} className={classes.sidebar}>
+          <Grid width="100%">
+            <SideBar />
+          </Grid>
         </Grid>
-        <Grid container item xs={10}>
-          {filmData?.map((it) => {
+        <Grid
+          id="cards"
+          container
+          component="div"
+          item
+          xs={10}
+          className={classes.cards}
+          onScroll={(e: React.MouseEvent<HTMLDivElement>) => handleScroll(e)}
+          ref={inputRef}
+        >
+          {filmData?.map((it: Films) => {
             return (
-              <Grid item xs={6} key={it?.id} p={2}>
-                <Image
-                  className={classes.image}
-                  src={`https://image.tmdb.org/t/p/w500${
-                    it.backdrop_path || it.poster_path
-                  }`}
-                  alt="Vercel Logo"
-                  width={160}
-                  height={90}
-                  layout="responsive"
-                  objectFit="contain"
-                />
+              <Grid
+                item
+                xs={6}
+                key={it?.id}
+                p={1}
+                onClick={() => handleClick(it)}
+              >
+                <Card item={it} />
               </Grid>
             );
           })}
         </Grid>
       </Grid>
-
-      <footer className={classes.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Created by{"Alena Piachenka"}
-          <span className={classes.footer}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
     </>
   );
 }
 
 export async function getStaticProps() {
-  const res = await fetch(`${API_URL}?api_key=${API_KEY_3}&page=1`);
-  const data = await res.json();
+  interface FetchedDataProps {
+    results: Films[];
+    total_pages: number;
+  }
+
+  const { results, total_pages }: FetchedDataProps = await fetchData(
+    API_ALL_FILMS_URL,
+    `?api_key=${API_KEY_3}&page=1`
+  );
 
   return {
-    props: { data: data?.results }, // will be passed to the page component as props
+    props: { data: results, totalPages: total_pages }, // will be passed to the page component as props
   };
 }
