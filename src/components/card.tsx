@@ -22,8 +22,9 @@ import { Films } from "../utils/types";
 
 const useStyles = makeStyles(() => ({
   container: {
-    border: "2px double rgba(0, 0, 0, 0.12)",
-    borderRadius: "5%",
+    borderBottom: "0.5px solid grey",
+    borderRadius: "5px",
+    boxShadow: "0 5px 20px rgb(0 0 0 /30%), 0 0px 10px rgb(0 0 0 / 30%)",
   },
 }));
 
@@ -41,12 +42,11 @@ const Card = ({ item }: CardProps) => {
   const favoritesSelector = useSelector(favoritesCounter);
   const dispatch = useDispatch();
 
-  const [willWatch, setWillWatch] = useState(false);
-  const [liked, setLiked] = useState(false);
+  const [willWatch, setWillWatch] = useState<boolean>(false);
+  const [liked, setLiked] = useState<boolean>(false);
 
   const handleWillWatchClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-
     dispatch({
       type: willWatch ? REMOVE_FROM_WILL_WATCH : ADD_TO_WILL_WATCH,
       payload: item?.id,

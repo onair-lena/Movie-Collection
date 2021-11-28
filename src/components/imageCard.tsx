@@ -21,7 +21,11 @@ const ImageCard = ({ poster, width, height }: CardProps) => {
     <Box>
       <Image
         className={classes.image}
-        src={`https://image.tmdb.org/t/p/w500${poster}`}
+        src={
+          poster
+            ? `https://image.tmdb.org/t/p/w500${poster}`
+            : "/static/portrait-placeholder.png"
+        }
         alt="Vercel Logo"
         width={width}
         height={height}
