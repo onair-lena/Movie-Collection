@@ -1,4 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { GetStaticProps } from "next";
 import React from "react";
 
@@ -17,6 +18,15 @@ import {
   Videos,
 } from "../../src/utils/types";
 
+const useStyles = makeStyles(() => ({
+  container: {
+    borderBottom: "0.5px solid grey",
+    borderRadius: "5px",
+    boxShadow: "0 5px 20px rgb(0 0 0 /30%), 0 0px 10px rgb(0 0 0 / 30%)",
+    backgroundColor: "rgb(222, 222, 222)",
+  },
+}));
+
 export type FilmDetailProps = Films;
 interface FilmPageProps {
   item: [
@@ -31,6 +41,7 @@ interface FilmPageProps {
 
 const Film = ({ item }: FilmPageProps) => {
   const [filmData, stuffData, videoData, reviewsData] = item;
+  const classes = useStyles();
 
   return (
     <Grid container>
@@ -41,8 +52,7 @@ const Film = ({ item }: FilmPageProps) => {
         justifyContent="center"
         xs={12}
         my={3}
-        mx={4}
-        borderBottom="0.5px solid grey"
+        className={classes.container}
       >
         <Typography width="100%" align="center" variant="h3">
           {filmData?.title}

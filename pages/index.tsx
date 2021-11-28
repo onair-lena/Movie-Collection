@@ -108,7 +108,7 @@ export default function Home({ data, totalPages }: FilmDataProps) {
                 item
                 xs={6}
                 key={it?.id}
-                p={1}
+                p={2}
                 onClick={() => handleClick(it)}
               >
                 <Card item={it} />
