@@ -32,19 +32,14 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface FilmDataProps {
-  results: {
-    data: Films[];
-    totalPages: number;
-  };
+  results: Films[];
   totalPages: number;
 }
 
 export interface FilmsDataState {
   films: {
-    results: {
-      data: Films[];
-      totalPages: number;
-    };
+    results: Films[];
+
     totalPages: number;
   };
 }
@@ -89,7 +84,7 @@ const Home = () => {
 
   useEffect(() => {
     if (data) {
-      setFilmData(data?.data);
+      setFilmData(data);
     }
   }, [data]);
 
