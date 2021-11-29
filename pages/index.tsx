@@ -8,6 +8,12 @@ import SideBar from "../src/components/sideBar";
 import { API_ALL_FILMS_URL, API_KEY_3 } from "../src/utils/api/api";
 import { fetchData } from "../src/utils/fetchData";
 import { Films } from "../src/utils/types";
+import { wrapper } from "../src/redux/store";
+import { AnyAction } from "redux";
+
+import { connect, useSelector } from "react-redux";
+import { bindActionCreators, ThunkDispatch } from "@reduxjs/toolkit";
+import { getFilms } from "../src/redux/actions";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -26,16 +32,33 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface FilmDataProps {
-  data: Films[];
+  results: {
+    data: Films[];
+    totalPages: number;
+  };
   totalPages: number;
 }
 
-export default function Home({ data, totalPages }: FilmDataProps) {
+export interface FilmsDataState {
+  films: {
+    results: {
+      data: Films[];
+      totalPages: number;
+    };
+    totalPages: number;
+  };
+}
+
+const Home = () => {
   const classes = useStyles();
   const router = useRouter();
   const inputRef = useRef<any>();
   const [filmData, setFilmData] = useState<Films[]>([]);
   const [pageNumber, setPageNumber] = useState(1);
+
+  const filmsData = (state: FilmsDataState) => state.films;
+  const { results: data, totalPages }: FilmDataProps = useSelector(filmsData);
+
   //const [sort] = useState("popularity.desc");
 
   // const getData = useCallback(async () => {
@@ -62,11 +85,11 @@ export default function Home({ data, totalPages }: FilmDataProps) {
       }, 200);
     }
   };
-  // console.log(filmData);
+  // console.log(data);
 
   useEffect(() => {
     if (data) {
-      setFilmData(data);
+      setFilmData(data?.data);
     }
   }, [data]);
 
@@ -119,20 +142,28 @@ export default function Home({ data, totalPages }: FilmDataProps) {
       </Grid>
     </>
   );
-}
+};
 
-export async function getStaticProps() {
-  interface FetchedDataProps {
+export interface FetchedDataProps {
+  data: {
     results: Films[];
     total_pages: number;
-  }
+  };
+}
 
-  const { results, total_pages }: FetchedDataProps = await fetchData(
+export const getStaticProps = wrapper.getStaticProps((store) => async () => {
+  const data: FetchedDataProps = await fetchData(
     API_ALL_FILMS_URL,
     `?api_key=${API_KEY_3}&page=1`
   );
+  store.dispatch({ type: "GET_FILMS", payload: data });
+  return { props: { data: {} } };
+});
 
+const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
   return {
-    props: { data: results, totalPages: total_pages }, // will be passed to the page component as props
+    getFilms: bindActionCreators(getFilms, dispatch),
   };
-}
+};
+
+export default connect(null, mapDispatchToProps)(Home);

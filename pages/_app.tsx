@@ -6,7 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import theme from "../src/utils/theme";
 import createCache from "@emotion/cache";
-import { store } from "../src/redux/store";
+import { wrapper } from "../src/redux/store";
 import { Provider } from "react-redux";
 
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -16,7 +16,7 @@ interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 
-export default function MyApp(props: MyAppProps) {
+const MyApp = (props: MyAppProps) => {
   const { Component, pageProps } = props;
 
   React.useEffect(() => {
@@ -29,17 +29,18 @@ export default function MyApp(props: MyAppProps) {
 
   return (
     <CacheProvider value={cache}>
-      <Provider store={store}>
-        <Head>
-          <title>My page</title>
-          <meta name="viewport" content="initial-scale=1, width=device-width" />
-        </Head>
-        <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          <Component {...pageProps} />
-        </ThemeProvider>
-      </Provider>
+      {/* <Provider store={store}> */}
+      <Head>
+        <title>My page</title>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+      </Head>
+      <ThemeProvider theme={theme}>
+        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
+      {/* </Provider> */}
     </CacheProvider>
   );
-}
+};
+export default wrapper.withRedux(MyApp);

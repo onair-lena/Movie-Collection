@@ -3,7 +3,15 @@ import {
   REMOVE_FROM_WILL_WATCH,
   ADD_TO_FAVORITES,
   REMOVE_FROM_FAVORITES,
+  GET_FILMS,
 } from "./types";
+
+export const getFilms = (films: any[]) => {
+  return {
+    type: GET_FILMS,
+    payload: films,
+  };
+};
 
 export const addToWillWatch = (id: number) => {
   return {

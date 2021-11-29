@@ -1,20 +1,35 @@
-import { createStore, compose } from "redux";
-import { rootReducer } from "./rootReducer";
+import { createStore, applyMiddleware, AnyAction } from "redux";
+import thunkMiddleware from "redux-thunk";
+import { createWrapper, HYDRATE } from "next-redux-wrapper";
+import { getFilmsReducer } from "./getFilmReducer";
+import { Middleware } from "@reduxjs/toolkit";
 
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+const bindMiddleware = (middleware: Middleware<any, any, any>[]) => {
+  if (process.env.NODE_ENV !== "production") {
+    const { composeWithDevTools } = require("redux-devtools-extension");
+    return composeWithDevTools(applyMiddleware(...middleware));
   }
+  return applyMiddleware(...middleware);
+};
+
+export interface State {
+  films: null;
 }
 
-export const store =
-  typeof window !== "undefined"
-    ? createStore(
-        rootReducer,
-        compose(
-          (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ &&
-            window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__()) ||
-            compose
-        )
-      )
-    : createStore(rootReducer);
+const reducer = (state: State = { films: null }, action: AnyAction) => {
+  if (action.type === HYDRATE) {
+    const nextState = {
+      ...state,
+      ...action.payload,
+    };
+    return nextState;
+  } else {
+    return getFilmsReducer(state, action);
+  }
+};
+
+const initStore = () => {
+  return createStore(reducer, bindMiddleware([thunkMiddleware]));
+};
+
+export const wrapper = createWrapper(initStore);
