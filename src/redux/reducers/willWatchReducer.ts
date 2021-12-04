@@ -1,8 +1,8 @@
-import { AnyAction, PayloadAction } from "@reduxjs/toolkit";
-import { ADD_TO_WILL_WATCH, REMOVE_FROM_WILL_WATCH } from "./types";
+import { AnyAction } from "@reduxjs/toolkit";
+import { ADD_TO_WILL_WATCH, REMOVE_FROM_WILL_WATCH } from "../types";
 
 const initialState = {
-  willWatchArray: [],
+  willWatchArray: [] as string[],
 };
 
 export const willWatchReducer = (state = initialState, action: AnyAction) => {
@@ -16,7 +16,7 @@ export const willWatchReducer = (state = initialState, action: AnyAction) => {
     case REMOVE_FROM_WILL_WATCH:
       return {
         ...state,
-        willWatchArray: state.willWatchArray.filter(
+        willWatchArray: state?.willWatchArray.filter(
           (it) => it !== action.payload
         ),
       };

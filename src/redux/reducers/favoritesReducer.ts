@@ -1,8 +1,8 @@
-import { AnyAction, PayloadAction } from "@reduxjs/toolkit";
-import { ADD_TO_FAVORITES, REMOVE_FROM_FAVORITES } from "./types";
+import { AnyAction } from "@reduxjs/toolkit";
+import { ADD_TO_FAVORITES, REMOVE_FROM_FAVORITES } from "../types";
 
 const initialState = {
-  favoritesArray: [],
+  favoritesArray: [] as string[],
 };
 
 export const favoritesReducer = (state = initialState, action: AnyAction) => {

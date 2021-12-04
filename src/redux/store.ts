@@ -1,8 +1,8 @@
 import { createStore, applyMiddleware, AnyAction } from "redux";
 import thunkMiddleware from "redux-thunk";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
-import { getFilmsReducer } from "./getFilmReducer";
 import { Middleware } from "@reduxjs/toolkit";
+import { rootReducer } from "./reducers/rootReducer";
 
 const bindMiddleware = (middleware: Middleware<any, any, any>[]) => {
   if (process.env.NODE_ENV !== "production") {
@@ -13,18 +13,50 @@ const bindMiddleware = (middleware: Middleware<any, any, any>[]) => {
 };
 
 export interface State {
-  films: null;
+  favoritesReducer: {
+    favoritesArray: any[];
+  };
+  willWatchReducer: {
+    willWatchArray: any[];
+  };
+  getFilmsReducer: {
+    films: any;
+  };
 }
 
-const reducer = (state: State = { films: null }, action: AnyAction) => {
+const initialState: State = {
+  favoritesReducer: {
+    favoritesArray: [],
+  },
+  willWatchReducer: {
+    willWatchArray: [],
+  },
+  getFilmsReducer: {
+    films: {},
+  },
+};
+
+const reducer = (state: State = initialState, action: AnyAction) => {
   if (action.type === HYDRATE) {
     const nextState = {
       ...state,
       ...action.payload,
     };
+
+    if (state.favoritesReducer.favoritesArray.length !== 0)
+      nextState.favoritesReducer.favoritesArray =
+        state.favoritesReducer.favoritesArray;
+
+    if (state.willWatchReducer.willWatchArray.length !== 0)
+      nextState.willWatchReducer.willWatchArray =
+        state.willWatchReducer.willWatchArray;
+
+    if (Object.values(state.getFilmsReducer.films).length !== 0)
+      nextState.getFilmsReducer.films = state.getFilmsReducer.films;
+
     return nextState;
   } else {
-    return getFilmsReducer(state, action);
+    return rootReducer(state, action);
   }
 };
 

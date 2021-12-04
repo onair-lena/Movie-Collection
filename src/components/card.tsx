@@ -17,7 +17,6 @@ import {
 } from "../redux/types";
 import { RootState } from "./sideBar";
 
-import {} from "@emotion/react";
 import { Films } from "../utils/types";
 
 const useStyles = makeStyles(() => ({

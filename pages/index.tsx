@@ -11,7 +11,7 @@ import { Films } from "../src/utils/types";
 import { wrapper } from "../src/redux/store";
 import { AnyAction } from "redux";
 
-import { connect, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { bindActionCreators, ThunkDispatch } from "@reduxjs/toolkit";
 import { getFilms } from "../src/redux/actions";
 
@@ -37,22 +37,26 @@ interface FilmDataProps {
 }
 
 export interface FilmsDataState {
-  films: {
-    results: Films[];
+  getFilmsReducer: {
+    films: {
+      results: Films[];
 
-    totalPages: number;
+      totalPages: number;
+    };
   };
 }
 
 const Home = () => {
   const classes = useStyles();
   const router = useRouter();
+
   const inputRef = useRef<any>();
   const [filmData, setFilmData] = useState<Films[]>([]);
   const [pageNumber, setPageNumber] = useState(1);
 
-  const filmsData = (state: FilmsDataState) => state.films;
+  const filmsData = (state: FilmsDataState) => state.getFilmsReducer?.films;
   const { results: data, totalPages }: FilmDataProps = useSelector(filmsData);
+  const dispatch = useDispatch();
 
   //const [sort] = useState("popularity.desc");
 
@@ -66,9 +70,9 @@ const Home = () => {
   const handleScroll = (e: React.MouseEvent<HTMLDivElement>) => {
     const bottom =
       (e.target as HTMLDivElement).scrollHeight -
-      (e.target as HTMLDivElement).scrollTop -
-      window.innerHeight;
-    if (bottom < window.innerHeight && pageNumber !== totalPages) {
+      (e.target as HTMLDivElement).scrollTop;
+
+    if (bottom === window.innerHeight && pageNumber !== totalPages) {
       clearTimeout(timeout.current);
       setPageNumber(pageNumber + 1);
       timeout.current = window.setTimeout(async () => {
@@ -76,7 +80,13 @@ const Home = () => {
           API_ALL_FILMS_URL,
           `?api_key=${API_KEY_3}&page=${pageNumber + 1}`
         );
-        setFilmData(filmData.concat(newPageData?.results));
+        dispatch({
+          type: "GET_FILMS",
+          payload: {
+            page: newPageData?.page,
+            results: newPageData?.results,
+          },
+        });
       }, 200);
     }
   };

@@ -25,7 +25,7 @@ const SideBar = () => {
   const favorites = (state: RootState) => state.favoritesReducer;
   const willWatchSelector = useSelector(willWatch);
   const favoritesSelector = useSelector(favorites);
-
+  console.log();
   return (
     <Grid p={1} container>
       <Grid container item xs={12} py={1}>
