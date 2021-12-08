@@ -22,6 +22,9 @@ export interface State {
   getFilmsReducer: {
     films: any;
   };
+  sortReducer: {
+    sort: string;
+  };
 }
 
 const initialState: State = {
@@ -33,6 +36,9 @@ const initialState: State = {
   },
   getFilmsReducer: {
     films: {},
+  },
+  sortReducer: {
+    sort: "popularity.desc",
   },
 };
 
