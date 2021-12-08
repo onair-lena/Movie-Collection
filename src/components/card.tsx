@@ -15,7 +15,7 @@ import {
   REMOVE_FROM_FAVORITES,
   REMOVE_FROM_WILL_WATCH,
 } from "../redux/types";
-import { RootState } from "./sideBar";
+import { RootState } from "./sideBar/sideBar";
 
 import { Films } from "../utils/types";
 

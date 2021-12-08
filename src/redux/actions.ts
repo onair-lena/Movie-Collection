@@ -4,12 +4,20 @@ import {
   ADD_TO_FAVORITES,
   REMOVE_FROM_FAVORITES,
   GET_FILMS,
+  SORT_FILMS,
 } from "./types";
 
 export const getFilms = (films: any[]) => {
   return {
     type: GET_FILMS,
     payload: films,
+  };
+};
+
+export const setSorting = (sort: string) => {
+  return {
+    type: SORT_FILMS,
+    payload: sort,
   };
 };
 

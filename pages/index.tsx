@@ -2,16 +2,15 @@ import { Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Card from "../src/components/card";
-import SideBar from "../src/components/sideBar";
+import SideBar from "../src/components/sideBar/sideBar";
 import { API_ALL_FILMS_URL, API_KEY_3 } from "../src/utils/api/api";
 import { fetchData } from "../src/utils/fetchData";
 import { Films } from "../src/utils/types";
 import { wrapper } from "../src/redux/store";
 import { AnyAction } from "redux";
-
-import { connect, useDispatch, useSelector } from "react-redux";
+import { connect, shallowEqual, useDispatch, useSelector } from "react-redux";
 import { bindActionCreators, ThunkDispatch } from "@reduxjs/toolkit";
 import { getFilms } from "../src/redux/actions";
 
@@ -46,25 +45,27 @@ export interface FilmsDataState {
   };
 }
 
+export interface SortingState {
+  sortReducer: {
+    sort: string;
+  };
+}
+
 const Home = () => {
   const classes = useStyles();
   const router = useRouter();
 
   const inputRef = useRef<any>();
-  const [filmData, setFilmData] = useState<Films[]>([]);
   const [pageNumber, setPageNumber] = useState(1);
+  const filmsData = (state: FilmsDataState) => state.getFilmsReducer.films;
+  const { results: filmData, totalPages }: FilmDataProps =
+    useSelector(filmsData);
 
-  const filmsData = (state: FilmsDataState) => state.getFilmsReducer?.films;
-  const { results: data, totalPages }: FilmDataProps = useSelector(filmsData);
+  const sortingData = (state: SortingState) => state.sortReducer.sort;
+  const sort = useSelector(sortingData, shallowEqual);
+  console.log("sort:", sort);
   const dispatch = useDispatch();
 
-  //const [sort] = useState("popularity.desc");
-
-  // const getData = useCallback(async () => {
-  //   await fetch(`${API_URL}?api_key=${API_KEY_3}&sort_by=${sort}&page=1`)
-  //     .then((response) => response.json())
-  //     .then((result) => setFilmData(result.results));
-  // }, [filmData, sort])
   const timeout = useRef<any>();
 
   const handleScroll = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -78,27 +79,20 @@ const Home = () => {
       timeout.current = window.setTimeout(async () => {
         const newPageData = await fetchData(
           API_ALL_FILMS_URL,
-          `?api_key=${API_KEY_3}&page=${pageNumber + 1}`
+          `?api_key=${API_KEY_3}&page=${pageNumber + 1}&sort_by=${sort}`
         );
         dispatch({
           type: "GET_FILMS",
           payload: {
             page: newPageData?.page,
-            results: newPageData?.results,
+            results: [...filmData, ...newPageData?.results],
           },
         });
       }, 200);
     }
   };
-  // console.log(data);
 
-  useEffect(() => {
-    if (data) {
-      setFilmData(data);
-    }
-  }, [data]);
-
-  if (!data) {
+  if (!filmData) {
     return <p>...loading...</p>;
   }
 
@@ -120,6 +114,7 @@ const Home = () => {
             <SideBar />
           </Grid>
         </Grid>
+
         <Grid
           id="cards"
           container
@@ -159,7 +154,7 @@ export interface FetchedDataProps {
 export const getStaticProps = wrapper.getStaticProps((store) => async () => {
   const data: FetchedDataProps = await fetchData(
     API_ALL_FILMS_URL,
-    `?api_key=${API_KEY_3}&page=1`
+    `?api_key=${API_KEY_3}&page=1&sort_by=popularity.desc`
   );
   store.dispatch({ type: "GET_FILMS", payload: data });
   return { props: { data: {} } };
