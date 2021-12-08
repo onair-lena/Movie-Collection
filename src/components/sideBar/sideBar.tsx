@@ -40,10 +40,7 @@ const SideBar = () => {
       </Grid>
       <Grid item xs={12} height="16px" />
       <Grid container item xs={12} className={classes.box}>
-        <SortingOptions
-          willWatch={willWatchSelector?.willWatchArray.length}
-          favorite={favoritesSelector?.favoritesArray.length}
-        />
+        <SortingOptions />
       </Grid>
     </Grid>
   );
