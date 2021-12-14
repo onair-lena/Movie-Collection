@@ -1,17 +1,16 @@
-import { Grid, Button, SwipeableDrawer, Divider } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Grid, Button, SwipeableDrawer } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
 import SortingOptions from "./sortingOptions";
 import WatchOptions from "./watchOptions";
 
-const useStyles = makeStyles(() => ({
-  box: {
-    borderBottom: "0.5px solid grey",
-    borderRadius: "5px",
-    boxShadow: "0px 0px 15px rgb(0 0 0 / 30%), 0 0px 10px rgb(0 0 0 / 10%)",
-  },
-}));
+const styles = {
+  px: 1,
+  height: "56px",
+  borderBottom: "0.5px solid grey",
+  borderRadius: "5px",
+  boxShadow: "0px 0px 15px rgb(0 0 0 / 30%), 0 0px 10px rgb(0 0 0 / 10%)",
+};
 
 export interface RootState {
   willWatchReducer: {
@@ -23,8 +22,6 @@ export interface RootState {
 }
 
 const SideBarMobile = () => {
-  const classes = useStyles();
-
   const willWatch = (state: RootState) => state.willWatchReducer;
   const favorites = (state: RootState) => state.favoritesReducer;
   const willWatchSelector = useSelector(willWatch);
@@ -37,17 +34,7 @@ const SideBarMobile = () => {
   };
 
   return (
-    <Grid
-      container
-      sx={{
-        px: 1,
-        height: "56px",
-        // backgroundColor: "#B6B6B7",
-        borderBottom: "0.5px solid grey",
-        borderRadius: "5px",
-        boxShadow: "0 5px 5px rgb(0 0 0 / 20%), 0 5px 10px rgb(0 0 0 / 30%)",
-      }}
-    >
+    <Grid container sx={styles}>
       {/* <Divider orientation="vertical" flexItem /> */}
       <Button
         sx={{ color: "black", fontWeight: 600 }}

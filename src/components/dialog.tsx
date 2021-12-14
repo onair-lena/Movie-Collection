@@ -4,7 +4,6 @@ import Modal from "@mui/material/Modal";
 import Player from "./player";
 import { Box, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { Videos } from "../utils/types";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
