@@ -1,4 +1,11 @@
-import { Card, CardContent, Grid, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Grid,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React from "react";
 import { Cast } from "../utils/types";
@@ -18,6 +25,9 @@ interface CastDetailsProps {
 
 const CastDetails = ({ cast }: CastDetailsProps) => {
   const classes = useStyles();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Grid container item xs={12}>
       <Grid item xs={12} py={1} borderBottom="0.5px solid grey">
@@ -35,17 +45,17 @@ const CastDetails = ({ cast }: CastDetailsProps) => {
       >
         {cast?.map((it) => {
           return (
-            <Grid item xs={3} key={it?.id} p={3}>
+            <Grid item xs={isMobile ? 12 : 3} key={it?.id} p={isMobile ? 1 : 3}>
               <Card className={classes.container}>
                 <Grid container item xs={12} p={2}>
-                  <Grid item xs={6}>
+                  <Grid item xs={isMobile ? 3 : 6}>
                     <ImageCard
                       poster={it?.profile_path}
                       width={50}
                       height={75}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={isMobile ? 9 : 6}>
                     <CardContent>
                       <Typography variant="body2">{it?.name}</Typography>
                       <Typography variant="caption" color="text.secondary">

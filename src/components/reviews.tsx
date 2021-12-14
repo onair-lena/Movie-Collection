@@ -8,6 +8,7 @@ const useStyles = makeStyles(() => ({
     borderBottom: "0.5px solid grey",
     borderRadius: "5px",
     boxShadow: "0 5px 20px rgb(0 0 0 /30%), 0 0px 10px rgb(0 0 0 / 30%)",
+    overflowX: "scroll",
   },
 }));
 

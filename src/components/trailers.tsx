@@ -1,4 +1,12 @@
-import { Button, Card, CardMedia, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardMedia,
+  Grid,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React from "react";
 import { Videos } from "../utils/types";
@@ -27,6 +35,8 @@ interface TrailersProps {
 
 const Trailers = ({ trailers }: TrailersProps) => {
   const classes = useStyles();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -54,7 +64,7 @@ const Trailers = ({ trailers }: TrailersProps) => {
       >
         {trailers?.map((it) => {
           return (
-            <Grid item xs={3} key={it?.id} py={3} px={1}>
+            <Grid item xs={isMobile ? 6 : 3} key={it?.id} py={3} px={1}>
               <Card className={classes.container} onClick={handleClickOpen}>
                 <Grid container item xs={12} p={0.5}>
                   <CardMedia
@@ -73,7 +83,7 @@ const Trailers = ({ trailers }: TrailersProps) => {
                   </Button>
                 </Grid>
               </Card>
-              <DialogForm handleClose={handleClose} open={open} trailer={it} />
+              <DialogForm handleClose={handleClose} open={open} />
             </Grid>
           );
         })}

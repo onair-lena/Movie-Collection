@@ -1,4 +1,11 @@
-import { Grid, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
+import {
+  Grid,
+  IconButton,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import BookmarkAddedOutlinedIcon from "@mui/icons-material/BookmarkAddedOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
@@ -15,7 +22,7 @@ import {
   REMOVE_FROM_FAVORITES,
   REMOVE_FROM_WILL_WATCH,
 } from "../redux/types";
-import { RootState } from "./sideBar/sideBar";
+import { RootState } from "./sideBar/sideBarDesktop";
 
 import { Films } from "../utils/types";
 
@@ -34,6 +41,7 @@ export interface CardProps {
 const Card = ({ item }: CardProps) => {
   const classes = useStyles();
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const willWatchCounter = (state: RootState) => state.willWatchReducer;
   const favoritesCounter = (state: RootState) => state.favoritesReducer;
@@ -72,34 +80,66 @@ const Card = ({ item }: CardProps) => {
 
   return (
     <Grid container className={classes.container}>
+      {isMobile && (
+        <Grid item xs={12} textAlign="end">
+          <Tooltip title="Add to Will Watch">
+            <IconButton onClick={(e) => handleWillWatchClick(e)}>
+              {willWatch ? (
+                <BookmarkAddedOutlinedIcon fontSize="small" color="error" />
+              ) : (
+                <BookmarkAddOutlinedIcon fontSize="small" color="success" />
+              )}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Add to Favorites">
+            <IconButton onClick={(e) => handleFavoritesClick(e)}>
+              {liked ? (
+                <FavoriteOutlinedIcon fontSize="small" color="error" />
+              ) : (
+                <FavoriteBorderOutlinedIcon fontSize="small" />
+              )}
+            </IconButton>
+          </Tooltip>
+        </Grid>
+      )}
       <Grid item xs={12}>
         <ImageCard poster={item?.backdrop_path} width={160} height={90} />
       </Grid>
-      <Grid item xs={8} height={theme.spacing(8)}>
-        <Typography variant="h5" align="center">
+      <Grid
+        item
+        xs={isMobile ? 12 : 8}
+        height={theme.spacing(isMobile ? 6 : 8)}
+      >
+        <Typography
+          component="h5"
+          variant={isMobile ? "caption" : "h5"}
+          align="center"
+        >
           {item?.title}
         </Typography>
       </Grid>
-      <Grid item xs={4} textAlign="end">
-        <Tooltip title="Add to Will Watch">
-          <IconButton onClick={(e) => handleWillWatchClick(e)}>
-            {willWatch ? (
-              <BookmarkAddedOutlinedIcon fontSize="large" color="error" />
-            ) : (
-              <BookmarkAddOutlinedIcon fontSize="large" color="success" />
-            )}
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Add to Favorites">
-          <IconButton onClick={(e) => handleFavoritesClick(e)}>
-            {liked ? (
-              <FavoriteOutlinedIcon fontSize="large" color="error" />
-            ) : (
-              <FavoriteBorderOutlinedIcon fontSize="large" />
-            )}
-          </IconButton>
-        </Tooltip>
-      </Grid>
+      {!isMobile && (
+        <Grid item xs={4} textAlign="end">
+          <Tooltip title="Add to Will Watch">
+            <IconButton onClick={(e) => handleWillWatchClick(e)}>
+              {willWatch ? (
+                <BookmarkAddedOutlinedIcon fontSize="large" color="error" />
+              ) : (
+                <BookmarkAddOutlinedIcon fontSize="large" color="success" />
+              )}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Add to Favorites">
+            <IconButton onClick={(e) => handleFavoritesClick(e)}>
+              {liked ? (
+                <FavoriteOutlinedIcon fontSize="large" color="error" />
+              ) : (
+                <FavoriteBorderOutlinedIcon fontSize="large" />
+              )}
+            </IconButton>
+          </Tooltip>
+        </Grid>
+      )}
     </Grid>
   );
 };

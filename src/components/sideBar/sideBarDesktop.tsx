@@ -22,14 +22,14 @@ export interface RootState {
   };
 }
 
-const SideBar = () => {
+const SideBarDesktop = () => {
   const classes = useStyles();
 
   const willWatch = (state: RootState) => state.willWatchReducer;
   const favorites = (state: RootState) => state.favoritesReducer;
   const willWatchSelector = useSelector(willWatch);
   const favoritesSelector = useSelector(favorites);
-  console.log();
+
   return (
     <Grid container>
       <Grid container item xs={12} className={classes.box}>
@@ -45,4 +45,4 @@ const SideBar = () => {
     </Grid>
   );
 };
-export default SideBar;
+export default SideBarDesktop;

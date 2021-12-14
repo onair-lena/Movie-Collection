@@ -21,10 +21,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface DialogFormProps {
   handleClose: (value: boolean) => void;
   open: boolean;
-  trailer: Videos;
 }
 
-const DialogForm = ({ handleClose, open, trailer }: DialogFormProps) => {
+const DialogForm = ({ handleClose, open }: DialogFormProps) => {
   const classes = useStyles();
 
   return (
@@ -36,7 +35,7 @@ const DialogForm = ({ handleClose, open, trailer }: DialogFormProps) => {
         aria-describedby="modal-modal-description"
       >
         <Box className={classes.container}>
-          <Player keyId="MjVmL5x2Uvc" width={trailer?.size} />
+          <Player keyId="MjVmL5x2Uvc" />
         </Box>
       </Modal>
     </div>

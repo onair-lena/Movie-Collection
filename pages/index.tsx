@@ -1,10 +1,10 @@
-import { Grid } from "@mui/material";
+import { Grid, useMediaQuery, useTheme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useRef, useState } from "react";
 import Card from "../src/components/card";
-import SideBar from "../src/components/sideBar/sideBar";
+import SideBarDesktop from "../src/components/sideBar/sideBarDesktop";
 import { API_ALL_FILMS_URL, API_KEY_3 } from "../src/utils/api/api";
 import { fetchData } from "../src/utils/fetchData";
 import { Films } from "../src/utils/types";
@@ -13,6 +13,7 @@ import { AnyAction } from "redux";
 import { connect, shallowEqual, useDispatch, useSelector } from "react-redux";
 import { bindActionCreators, ThunkDispatch } from "@reduxjs/toolkit";
 import { getFilms } from "../src/redux/actions";
+import SideBarMobile from "../src/components/sideBar/sideBarMobile";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -54,6 +55,8 @@ export interface SortingState {
 const Home = () => {
   const classes = useStyles();
   const router = useRouter();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const inputRef = useRef<any>();
   const [pageNumber, setPageNumber] = useState(1);
@@ -109,18 +112,27 @@ const Home = () => {
       </Head>
 
       <Grid container className={classes.root}>
-        <Grid container item xs={2} className={classes.sidebar}>
-          <Grid width="100%">
-            <SideBar />
+        {!isMobile && (
+          <Grid container item xs={2} className={classes.sidebar}>
+            <Grid width="100%">
+              <SideBarDesktop />
+            </Grid>
           </Grid>
-        </Grid>
+        )}
+        {isMobile && (
+          <Grid container className={classes.sidebar}>
+            <Grid width="100%">
+              <SideBarMobile />
+            </Grid>
+          </Grid>
+        )}
 
         <Grid
           id="cards"
           container
           component="div"
           item
-          xs={10}
+          xs={isMobile ? 12 : 10}
           className={classes.cards}
           onScroll={(e: React.MouseEvent<HTMLDivElement>) => handleScroll(e)}
           ref={inputRef}
