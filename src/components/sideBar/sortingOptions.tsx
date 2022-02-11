@@ -1,20 +1,19 @@
 import React from "react";
-import { makeStyles } from "@mui/styles";
-import { Grid, Button, Divider, Theme } from "@mui/material";
+
+import { Grid, Button, Divider } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { SORT_FILMS } from "../../redux/types";
 import { API_ALL_FILMS_URL, API_KEY_3 } from "../../utils/api/api";
 import { fetchData } from "../../utils/fetchData";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const classes = {
   button: {
     width: "100%",
-    fontSize: theme.typography.body1.fontSize,
+    fontSize: "body1",
   },
-}));
+};
 
 const SortingOptions = () => {
-  const classes = useStyles();
   const dispatch = useDispatch();
 
   const getData = async (sort: string) => {
@@ -41,7 +40,7 @@ const SortingOptions = () => {
           <Button
             variant="text"
             size="small"
-            className={classes.button}
+            sx={classes.button}
             onClick={() => handleSortClick("popularity.desc")}
           >
             Sort by popularity
@@ -54,7 +53,7 @@ const SortingOptions = () => {
           <Button
             variant="text"
             size="small"
-            className={classes.button}
+            sx={classes.button}
             onClick={() => handleSortClick("vote_count.desc")}
           >
             Sort by votes
@@ -67,7 +66,7 @@ const SortingOptions = () => {
           <Button
             variant="text"
             size="small"
-            className={classes.button}
+            sx={classes.button}
             onClick={() => handleSortClick("revenue.desc")}
           >
             Sort by revenue

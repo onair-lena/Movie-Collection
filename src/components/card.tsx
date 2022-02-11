@@ -26,20 +26,19 @@ import { RootState } from "./sideBar/sideBarDesktop";
 
 import { Films } from "../utils/types";
 
-const useStyles = makeStyles(() => ({
+const classes = {
   container: {
     borderBottom: "0.5px solid grey",
     borderRadius: "5px",
     boxShadow: "0 15px 30px rgb(0 0 0 /50%), 0 10px 30px rgb(0 0 0 / 50%)",
   },
-}));
+};
 
 export interface CardProps {
   item?: Films;
 }
 
 const Card = ({ item }: CardProps) => {
-  const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -79,7 +78,7 @@ const Card = ({ item }: CardProps) => {
   }, [favoritesSelector]);
 
   return (
-    <Grid container className={classes.container}>
+    <Grid container sx={classes.container}>
       {isMobile && (
         <Grid item xs={12} textAlign="end">
           <Tooltip title="Add to Will Watch">

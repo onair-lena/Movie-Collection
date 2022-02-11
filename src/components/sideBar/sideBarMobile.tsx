@@ -4,12 +4,18 @@ import { useSelector } from "react-redux";
 import SortingOptions from "./sortingOptions";
 import WatchOptions from "./watchOptions";
 
-const styles = {
-  px: 1,
-  height: "56px",
-  borderBottom: "0.5px solid grey",
-  borderRadius: "5px",
-  boxShadow: "0px 0px 15px rgb(0 0 0 / 30%), 0 0px 10px rgb(0 0 0 / 10%)",
+const classes = {
+  container: {
+    px: 1,
+    height: "56px",
+    borderBottom: "0.5px solid grey",
+    borderRadius: "5px",
+    boxShadow: "0px 0px 15px rgb(0 0 0 / 30%), 0 0px 10px rgb(0 0 0 / 10%)",
+  },
+  box: {
+    color: "black",
+    fontWeight: 600,
+  },
 };
 
 export interface RootState {
@@ -34,19 +40,13 @@ const SideBarMobile = () => {
   };
 
   return (
-    <Grid container sx={styles}>
+    <Grid container sx={classes.container}>
       {/* <Divider orientation="vertical" flexItem /> */}
-      <Button
-        sx={{ color: "black", fontWeight: 600 }}
-        onClick={() => toggleDrawer(true, "watch")}
-      >
+      <Button sx={classes.box} onClick={() => toggleDrawer(true, "watch")}>
         Watch options
       </Button>
       {/* <Divider orientation="vertical" flexItem /> */}
-      <Button
-        sx={{ color: "black", fontWeight: 600 }}
-        onClick={() => toggleDrawer(true, "sort")}
-      >
+      <Button sx={classes.box} onClick={() => toggleDrawer(true, "sort")}>
         Sort options
       </Button>
       {/* <Divider orientation="vertical" flexItem /> */}

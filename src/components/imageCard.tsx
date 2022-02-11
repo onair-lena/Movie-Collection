@@ -1,12 +1,12 @@
 import { Box } from "@mui/material";
+import { styled } from "@mui/system";
 import Image from "next/image";
-import { makeStyles } from "@mui/styles";
 
-const useStyles = makeStyles(() => ({
+const StyledImage = styled(Image)({
   image: {
     backgroundColor: "grey",
   },
-}));
+});
 
 export interface CardProps {
   poster?: string;
@@ -15,12 +15,9 @@ export interface CardProps {
 }
 
 const ImageCard = ({ poster, width, height }: CardProps) => {
-  const classes = useStyles();
-
   return (
     <Box>
-      <Image
-        className={classes.image}
+      <StyledImage
         src={
           poster
             ? `https://image.tmdb.org/t/p/w500${poster}`

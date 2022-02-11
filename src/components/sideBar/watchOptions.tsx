@@ -1,13 +1,12 @@
 import React from "react";
-import { makeStyles } from "@mui/styles";
-import { Grid, Button, Typography, Divider, Theme } from "@mui/material";
+import { Grid, Button, Typography, Divider } from "@mui/material";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const classes = {
   button: {
     width: "100%",
-    fontSize: theme.typography.body1.fontSize,
+    fontSize: "body1",
   },
-}));
+};
 
 interface WatchOptionsProps {
   willWatch: number;
@@ -15,12 +14,11 @@ interface WatchOptionsProps {
 }
 
 const WatchOptions = ({ willWatch, favorite }: WatchOptionsProps) => {
-  const classes = useStyles();
   return (
     <>
       <Grid container item xs={12} py={1}>
         <Grid item xs={10}>
-          <Button variant="text" size="small" className={classes.button}>
+          <Button variant="text" size="small" sx={classes.button}>
             Will Watch
           </Button>
         </Grid>
@@ -31,7 +29,7 @@ const WatchOptions = ({ willWatch, favorite }: WatchOptionsProps) => {
       <Divider sx={{ width: "100%" }} />
       <Grid container item xs={12} py={1}>
         <Grid item xs={10}>
-          <Button variant="text" size="small" className={classes.button}>
+          <Button variant="text" size="small" sx={classes.button}>
             Favorites
           </Button>
         </Grid>

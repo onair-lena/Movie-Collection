@@ -1,24 +1,20 @@
 import { Avatar, Box, Grid, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { SxProps } from "@mui/system";
 import React from "react";
 import { Reviews } from "../utils/types";
 
-const useStyles = makeStyles(() => ({
-  container: {
-    borderBottom: "0.5px solid grey",
-    borderRadius: "5px",
-    boxShadow: "0 5px 20px rgb(0 0 0 /30%), 0 0px 10px rgb(0 0 0 / 30%)",
-    overflowX: "scroll",
-  },
-}));
+const classes: SxProps = {
+  borderBottom: "0.5px solid grey",
+  borderRadius: "5px",
+  boxShadow: "0 5px 20px rgb(0 0 0 /30%), 0 0px 10px rgb(0 0 0 / 30%)",
+  overflowX: "scroll",
+};
 
 interface ReviewsProps {
   reviews: Reviews;
 }
 
 const ReviewsContainer = ({ reviews }: ReviewsProps) => {
-  const classes = useStyles();
-
   return (
     <Grid container item xs={12}>
       <Grid item xs={12} py={3} borderBottom="0.5px solid grey">
@@ -37,7 +33,7 @@ const ReviewsContainer = ({ reviews }: ReviewsProps) => {
         {reviews?.results?.map((it) => {
           return (
             <Grid item xs={12} key={it?.id} py={3}>
-              <Box className={classes.container} p={2}>
+              <Box sx={classes} p={2}>
                 <Grid display="flex" py={2}>
                   <Avatar
                     alt="it?.author"

@@ -7,12 +7,13 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Theme } from "@mui/material/styles";
+import { SxProps } from "@mui/system";
 import React from "react";
 import { Videos } from "../utils/types";
 import DialogForm from "./dialog";
 
-const useStyles = makeStyles(() => ({
+const classes: SxProps<Theme> = {
   container: {
     borderBottom: "0.5px solid grey",
     borderRadius: "5px",
@@ -27,14 +28,13 @@ const useStyles = makeStyles(() => ({
       backgroundColor: "red",
     },
   },
-}));
+};
 
 interface TrailersProps {
   trailers: Videos[];
 }
 
 const Trailers = ({ trailers }: TrailersProps) => {
-  const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [open, setOpen] = React.useState(false);
@@ -65,7 +65,7 @@ const Trailers = ({ trailers }: TrailersProps) => {
         {trailers?.map((it) => {
           return (
             <Grid item xs={isMobile ? 6 : 3} key={it?.id} py={3} px={1}>
-              <Card className={classes.container} onClick={handleClickOpen}>
+              <Card sx={classes.container} onClick={handleClickOpen}>
                 <Grid container item xs={12} p={0.5}>
                   <CardMedia
                     component="img"
@@ -77,7 +77,7 @@ const Trailers = ({ trailers }: TrailersProps) => {
                     variant="contained"
                     size="small"
                     disableFocusRipple
-                    className={classes.button}
+                    sx={classes.button}
                   >
                     Watch
                   </Button>

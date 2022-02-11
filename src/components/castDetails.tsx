@@ -11,20 +11,19 @@ import React from "react";
 import { Cast } from "../utils/types";
 import ImageCard from "./imageCard";
 
-const useStyles = makeStyles(() => ({
+const classes = {
   container: {
     borderBottom: "0.5px solid grey",
     borderRadius: "5px",
     boxShadow: "0 5px 20px rgb(0 0 0 /30%), 0 0px 10px rgb(0 0 0 / 30%)",
   },
-}));
+};
 
 interface CastDetailsProps {
   cast: Cast[];
 }
 
 const CastDetails = ({ cast }: CastDetailsProps) => {
-  const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -46,7 +45,7 @@ const CastDetails = ({ cast }: CastDetailsProps) => {
         {cast?.map((it) => {
           return (
             <Grid item xs={isMobile ? 12 : 3} key={it?.id} p={isMobile ? 1 : 3}>
-              <Card className={classes.container}>
+              <Card sx={classes.container}>
                 <Grid container item xs={12} p={2}>
                   <Grid item xs={isMobile ? 3 : 6}>
                     <ImageCard
